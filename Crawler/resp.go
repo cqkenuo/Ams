@@ -9,12 +9,12 @@ type CResponse struct {
 	extract *goquery.Document
 }
 
-func NewCResponse(response http.Response) *CResponse {
+func NewCResponse(response *http.Response) *CResponse {
 	doc,err := goquery.NewDocumentFromReader(response.Body)
 	if err != nil{
 		panic("响应错误")
 	}
-	return &CResponse{&response,doc}
+	return &CResponse{response,doc}
 }
 
 func (cr *CResponse)Close() {
