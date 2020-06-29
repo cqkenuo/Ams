@@ -8,15 +8,15 @@ type fetch struct {
 	client *http.Client
 }
 
-func newFetch() *fetch{
+func newFetch() *fetch {
 	return &fetch{&http.Client{}}
 }
 
 type downResult struct {
 	resp *http.Response
-	err error
+	err  error
 }
 
-func (f *fetch)down(t *schedulerTask) {
+func (f *fetch) down(t *schedulerTask) {
 	t.callback <- &downResult{}
 }

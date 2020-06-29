@@ -1,4 +1,5 @@
 package Crawler
+
 import (
 	"github.com/PuerkitoBio/goquery"
 	"net/http"
@@ -10,13 +11,13 @@ type CResponse struct {
 }
 
 func NewCResponse(response *http.Response) *CResponse {
-	doc,err := goquery.NewDocumentFromReader(response.Body)
-	if err != nil{
+	doc, err := goquery.NewDocumentFromReader(response.Body)
+	if err != nil {
 		panic("响应错误")
 	}
-	return &CResponse{response,doc}
+	return &CResponse{response, doc}
 }
 
-func (cr *CResponse)Close() {
+func (cr *CResponse) Close() {
 	cr.Body.Close()
 }
