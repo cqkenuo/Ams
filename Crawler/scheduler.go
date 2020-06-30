@@ -1,6 +1,7 @@
 package Crawler
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -40,6 +41,10 @@ func (s *scheduler) engine() {
 						resultChan := make(chan downResult)
 						go s.sfetch.down(&schedulerTask{t1, resultChan})
 						result := <-resultChan
+						if result.err != nil{
+							fmt.Println("错误请求错误")
+							continue
+						}
 						r := t1.callback(t1.request, NewCResponse(result.resp))
 						if r.ResultType == TaskType {
 							s.addTasks(r.TaskData)

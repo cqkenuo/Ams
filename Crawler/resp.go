@@ -8,14 +8,15 @@ import (
 type CResponse struct {
 	*http.Response
 	extract *goquery.Document
+	err error
 }
 
 func NewCResponse(response *http.Response) *CResponse {
 	doc, err := goquery.NewDocumentFromReader(response.Body)
 	if err != nil {
-		panic("响应错误")
+		return &CResponse{Response:response,err: err}
 	}
-	return &CResponse{response, doc}
+	return &CResponse{Response:response,extract: doc}
 }
 
 func (cr *CResponse) Close() {
