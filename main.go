@@ -3,8 +3,8 @@ package main
 import (
 	"Ams/Crawler"
 	"fmt"
+	"github.com/kataras/iris"
 	"net/http"
-	"time"
 )
 
 type BaiDuSpider struct {
@@ -37,7 +37,6 @@ func main() {
 	b := &BaiDuSpider{}
 	s := Crawler.NewScheduler(b,1)
 	s.Start()
-	//s.Close()
-	time.Sleep(10*time.Second)
-	//s.Close()
+	app := iris.New()
+	app.Run(iris.Addr(":8080"))
 }

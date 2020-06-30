@@ -1,5 +1,9 @@
 package Crawler
 
+import (
+	"time"
+)
+
 type scheduler struct {
 	spider    SpiderInterface
 	goCnt     int
@@ -26,21 +30,33 @@ func (s *scheduler) addTask(t *Task) {
 func (s *scheduler) engine() {
 	for i := 0; i < s.goCnt; i++ {
 		go func() {
+			emptyQueueCnt := 0
+			closeLabel:
 			for {
-				t := <-s.taskQueue
-				t1,ok := t.(*Task)
-				if ok{
-					resultChan := make(chan downResult)
-					go s.sfetch.down(&schedulerTask{t1, resultChan})
-					result := <-resultChan
-					r := t1.callback(t1.request, NewCResponse(result.resp))
-					if r.ResultType == TaskType {
-						s.addTasks(r.TaskData)
-					}else if r.ResultType == ResultType {
-						s.spider.ResultProcess(r.SetData)
+				select {
+				case t := <-s.taskQueue:
+					t1,ok := t.(*Task)
+					if ok{
+						resultChan := make(chan downResult)
+						go s.sfetch.down(&schedulerTask{t1, resultChan})
+						result := <-resultChan
+						r := t1.callback(t1.request, NewCResponse(result.resp))
+						if r.ResultType == TaskType {
+							s.addTasks(r.TaskData)
+						}else if r.ResultType == ResultType {
+							s.spider.ResultProcess(r.SetData)
+						}
+					}else {
+						// 主动停止协程
+						break closeLabel
 					}
-				}else {
-					break
+				default:
+					// 结束协程，当channel持续1分钟未提供消息，我们将退出当前协程
+					time.Sleep(10*time.Second)
+					emptyQueueCnt ++
+					if emptyQueueCnt >= 6{
+						break closeLabel
+					}
 				}
 			}
 		}()
