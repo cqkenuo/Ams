@@ -5,6 +5,7 @@ go 1.13
 require (
 	github.com/BurntSushi/toml v0.3.1 // indirect
 	github.com/Joker/jade v1.0.0 // indirect
+	github.com/PuerkitoBio/goquery v1.5.1
 	github.com/Shopify/goreferrer v0.0.0-20181106222321-ec9c9a553398 // indirect
 	github.com/andybalholm/cascadia v1.2.0 // indirect
 	github.com/aymerick/raymond v2.0.2+incompatible // indirect

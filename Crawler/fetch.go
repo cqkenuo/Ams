@@ -18,5 +18,6 @@ type downResult struct {
 }
 
 func (f *fetch) down(t *schedulerTask) {
-	t.callback <- &downResult{}
+	resp,err := f.client.Do(t.t.request)
+	t.callback <- downResult{resp,err}
 }

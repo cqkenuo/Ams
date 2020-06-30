@@ -2,11 +2,11 @@ package Crawler
 
 import "net/http"
 
-type task struct {
+type Task struct {
 	request *http.Request
-	callback func(r *http.Request,response *CResponse)
+	callback func(r *http.Request,response *CResponse) SpiderResult
 }
 
-func NewTask(r http.Request,callback func(r *http.Request,response *CResponse)) *task {
-	return &task{&r,callback}
+func NewTask(r *http.Request,callback func(r *http.Request,response *CResponse) SpiderResult) *Task {
+	return &Task{r,callback}
 }

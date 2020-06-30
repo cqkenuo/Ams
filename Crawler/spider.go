@@ -1,16 +1,15 @@
 package Crawler
 
-import "net/http"
+import (
+	"net/http"
+)
 
-type spiderInterface interface {
-	seeds() []*task
-	parse(request *http.Request, response *CResponse) interface{}
+type SpiderInterface interface {
+	Seeds() []*Task
+	Parse(request *http.Request, response *CResponse) SpiderResult
+	ResultProcess(result []map[string]interface{})
 }
 
 type Spider struct {
-	spiderInterface
-}
 
-func (s *Spider) start() []*task {
-	return s.seeds()
 }
