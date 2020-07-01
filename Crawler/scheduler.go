@@ -1,7 +1,6 @@
 package Crawler
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -24,6 +23,10 @@ func NewScheduler(spider SpiderInterface, goCnt int) *scheduler {
 
 func (s *scheduler) addTask(t *Task) {
 	go func(item *Task) {
+		// 如果任务的callback为nil，将callback置为爬虫Parse方法
+		if item.callback == nil{
+			item.callback = s.spider.Parse
+		}
 		s.taskQueue <- item
 	}(t)
 }
@@ -41,11 +44,10 @@ func (s *scheduler) engine() {
 						resultChan := make(chan downResult)
 						go s.sfetch.down(&schedulerTask{t1, resultChan})
 						result := <-resultChan
-						if result.err != nil{
-							fmt.Println("错误请求错误")
-							continue
-						}
-						r := t1.callback(t1.request, NewCResponse(result.resp))
+						close(resultChan)
+						cResponse := NewCResponse(result.resp,result.err)
+						r := t1.callback(t1.request,cResponse )
+						cResponse.Close()
 						if r.ResultType == TaskType {
 							s.addTasks(r.TaskData)
 						}else if r.ResultType == ResultType {
