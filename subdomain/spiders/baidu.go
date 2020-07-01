@@ -3,6 +3,8 @@ package subdomain
 import (
 	"Ams/crawler"
 	"fmt"
+	"github.com/PuerkitoBio/goquery"
+	"github.com/jpillora/go-tld"
 	"net/http"
 	"net/url"
 	"strings"
@@ -25,8 +27,20 @@ func(s *BaiDuSpider)getQuery(domain string,exceptDomain []string)string{
 }
 
 func (s *BaiDuSpider)Parse(task *crawler.Task, response *crawler.CResponse) crawler.SpiderResult{
-	fmt.Println(task.GetAttach())
-	return crawler.SpiderResult{}
+	var result []map[string]interface{}
+	response.Extract.Find("a[class*='c-showurl']").Each(func(i int, selection *goquery.Selection) {
+		v := selection.Text()
+		if !strings.HasPrefix(v,"http") {
+			v = fmt.Sprintf("http://%s",v)
+		}
+		u,err := tld.Parse(v)
+		if err == nil{
+			result = append(result,map[string]interface{}{
+				"domain":u.Host,
+			})
+		}
+	})
+	return crawler.SpiderResult{SetData: result}
 }
 
 func (s *BaiDuSpider)Seeds() []*crawler.Task{
@@ -34,8 +48,7 @@ func (s *BaiDuSpider)Seeds() []*crawler.Task{
 	for i:=0;i<=170;i+=10{
 		u := s.getUrl(s.getQuery(s.domain,[]string{}),i)
 		r,_ := http.NewRequest("GET",u,nil)
-		t := crawler.NewTask(r,nil)
-		fmt.Println(u)
+		t := s.NewTask(r,nil)
 		t.SetAttach(map[string]interface{}{
 			"pageNumber":i,
 			"domain":s.domain,
@@ -45,7 +58,6 @@ func (s *BaiDuSpider)Seeds() []*crawler.Task{
 	return seeds
 }
 
-
 func (s *BaiDuSpider)ResultProcess(result []map[string]interface{}){
-
+	fmt.Println(result)
 }

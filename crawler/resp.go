@@ -7,7 +7,7 @@ import (
 
 type CResponse struct {
 	*http.Response
-	extract *goquery.Document
+	Extract *goquery.Document
 	httpErr error
 	err error
 }
@@ -20,7 +20,7 @@ func NewCResponse(response *http.Response,httpErr error) *CResponse {
 	if err != nil {
 		return &CResponse{Response:response,err: err,httpErr: httpErr}
 	}
-	return &CResponse{Response:response,extract: doc,httpErr: httpErr}
+	return &CResponse{Response:response,Extract: doc,httpErr: httpErr}
 }
 
 func (cr *CResponse) Close() {

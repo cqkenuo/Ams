@@ -48,9 +48,10 @@ func (s *scheduler) engine() {
 						cResponse := NewCResponse(result.resp,result.err)
 						r := t1.callback(t1,cResponse )
 						cResponse.Close()
-						if r.ResultType == TaskType {
+						if r.TaskData != nil{
 							s.addTasks(r.TaskData)
-						}else if r.ResultType == ResultType {
+						}
+						if r.SetData != nil{
 							s.spider.ResultProcess(r.SetData)
 						}
 					}else {

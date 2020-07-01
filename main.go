@@ -7,7 +7,7 @@ import (
 )
 func main() {
 	f := subdomain.Factory{}
-	baiduSpider := f.CreateBaiDuSpider("zhihu.com")
+	baiduSpider := f.CreateBaiDuSpider("oppo.com")
 	s := crawler.NewScheduler(baiduSpider,10)
 	s.Start()
 	app := iris.New()
