@@ -1,4 +1,4 @@
-package Crawler
+package crawler
 
 import (
 	"time"
@@ -46,7 +46,7 @@ func (s *scheduler) engine() {
 						result := <-resultChan
 						close(resultChan)
 						cResponse := NewCResponse(result.resp,result.err)
-						r := t1.callback(t1.request,cResponse )
+						r := t1.callback(t1,cResponse )
 						cResponse.Close()
 						if r.ResultType == TaskType {
 							s.addTasks(r.TaskData)

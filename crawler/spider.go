@@ -1,12 +1,8 @@
-package Crawler
-
-import (
-	"net/http"
-)
+package crawler
 
 type SpiderInterface interface {
 	Seeds() []*Task
-	Parse(request *http.Request, response *CResponse) SpiderResult
+	Parse(request *Task, response *CResponse) SpiderResult
 	ResultProcess(result []map[string]interface{})
 }
 

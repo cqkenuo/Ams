@@ -1,4 +1,4 @@
-package Crawler
+package crawler
 
 type SpiderResult struct {
 	ResultType int

@@ -1,4 +1,4 @@
-package Crawler
+package crawler
 
 const (
 	TaskType   = 100
