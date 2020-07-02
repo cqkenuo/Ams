@@ -82,6 +82,11 @@ func (s *scheduler) Start() {
 }
 
 func (s *scheduler) Close() {
+	defer func() {
+		if r := recover(); r != nil {
+			// 保证taskQueue只关闭一次 close of closed channel
+		}
+	}()
 	fmt.Println("关闭爬虫")
 	close(s.taskQueue)
 }
