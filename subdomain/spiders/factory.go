@@ -28,7 +28,7 @@ func (f *Factory)CreateBaiDuSpider(domain string) crawler.SpiderInterface{
 		panic("初始化爬虫失败")
 	}
 	return &BaiDuSpider{
-		baseSpider{
+		baseSpider:baseSpider{
 			domain:fmt.Sprintf("%s.%s",u.Domain,u.TLD),
 			baseUrl: "https://www.baidu.com/s"}}
 }
