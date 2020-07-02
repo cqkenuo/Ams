@@ -2,9 +2,11 @@ package crawler
 
 import (
 	"fmt"
+	"strings"
+	"sync"
 	"time"
 )
-
+var once sync.Once
 type scheduler struct {
 	spider    SpiderInterface
 	goCnt     int
@@ -35,7 +37,7 @@ func (s *scheduler) addTask(t *Task) {
 func (s *scheduler) engine() {
 	for i := 0; i < s.goCnt; i++ {
 		go func() {
-			emptyQueueCnt := 0
+			emptyQueueCnt := -1
 		closeLabel:
 			for {
 				select {
@@ -59,11 +61,11 @@ func (s *scheduler) engine() {
 					}
 				default:
 					// 结束协程，当channel持续1分钟未提供消息，我们将退出当前协程
-					time.Sleep(10 * time.Second)
 					emptyQueueCnt++
 					if emptyQueueCnt >= 6 {
 						s.Close()
 					}
+					time.Sleep(10 * time.Second)
 				}
 			}
 		}()
@@ -85,8 +87,13 @@ func (s *scheduler) Close() {
 	defer func() {
 		if r := recover(); r != nil {
 			// 保证taskQueue只关闭一次 close of closed channel
+			if !strings.Contains(r.(error).Error(),"close of closed channel"){
+				panic(r)
+			}
 		}
 	}()
-	fmt.Println("关闭爬虫")
+	once.Do(func() {
+		s.spider.Close()
+	})
 	close(s.taskQueue)
 }
