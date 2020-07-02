@@ -111,5 +111,6 @@ func (s *BaiDuSpider)ResultProcess(result []map[string]interface{}){
 		}
 	}
 	lock.Unlock()
+	fmt.Println(result)
 	// 保存逻辑
 }

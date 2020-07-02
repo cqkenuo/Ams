@@ -30,5 +30,6 @@ func (f *Factory)CreateBaiDuSpider(domain string) crawler.SpiderInterface{
 	return &BaiDuSpider{
 		baseSpider:baseSpider{
 			domain:fmt.Sprintf("%s.%s",u.Domain,u.TLD),
-			baseUrl: "https://www.baidu.com/s"}}
+			baseUrl: "https://www.baidu.com/s"},
+	    domains: map[string]int{}}
 }
