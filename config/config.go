@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
+	"sync"
 )
 
 type DBC struct {
@@ -22,6 +23,9 @@ type Config struct {
 	DbConf DBC `yaml:"dbConf"`
 }
 
+var config *Config
+var once sync.Once
+
 func readConfFile()[]byte{
 	body,err := ioutil.ReadFile("./config/config.yml")
 	if err != nil{
@@ -30,11 +34,12 @@ func readConfFile()[]byte{
 	return body
 }
 
-func LoadConfig()Config{
-	var config Config
-	err:= yaml.Unmarshal(readConfFile(),&config)
-	if err != nil{
-		panic(fmt.Sprintf("读取配置文件错误:%s",err))
-	}
+func LoadConfig()*Config{
+	once.Do(func() {
+		err:= yaml.Unmarshal(readConfFile(),&config)
+		if err != nil{
+			panic(fmt.Sprintf("读取配置文件错误:%s",err))
+		}
+	})
 	return config
 }
