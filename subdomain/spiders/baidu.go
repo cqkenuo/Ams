@@ -1,7 +1,9 @@
 package subdomain
 
 import (
+	"Ams/config"
 	"Ams/crawler"
+	"Ams/model"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/jpillora/go-tld"
@@ -13,7 +15,7 @@ import (
 )
 
 var lock = sync.Mutex{}
-
+var db = model.GetAppDB(*config.LoadConfig())
 type BaiDuSpider struct {
 	baseSpider
 	domains map[string]int
@@ -70,11 +72,10 @@ func (s *BaiDuSpider)Parse(task *crawler.Task, response *crawler.CResponse) craw
 		}
 		page,o := task.GetAttach()["pageNumber"].(int)
 		if o{
-			r,_ := http.NewRequest("GET",s.getUrl(s.getQuery(s.domain,except),page),nil)
+			r,_ := http.NewRequest("GET",s.getUrl(s.getQuery(s.domain.Domain,except),page),nil)
 			t := s.NewTask(r,nil)
 			t.SetAttach(map[string]interface{}{
 				"pageNumber":page,
-				"domain":s.domain,
 			})
 			tasks = append(tasks,t)
 		}
@@ -85,13 +86,11 @@ func (s *BaiDuSpider)Parse(task *crawler.Task, response *crawler.CResponse) craw
 func (s *BaiDuSpider)Seeds() []*crawler.Task{
 	var seeds []*crawler.Task
 	for i:=0;i<=170;i+=10{
-		u := s.getUrl(s.getQuery(s.domain,[]string{}),i)
+		u := s.getUrl(s.getQuery(s.domain.Domain,[]string{}),i)
 		r,_ := http.NewRequest("GET",u,nil)
 		t := s.NewTask(r,nil)
 		t.SetAttach(map[string]interface{}{
-			"pageNumber":i,
-			"domain":s.domain,
-		})
+			"pageNumber":i})
 		seeds = append(seeds, t)
 	}
 	return seeds
@@ -112,8 +111,11 @@ func (s *BaiDuSpider)ResultProcess(result []map[string]interface{}){
 	}
 	lock.Unlock()
 	// 保存逻辑
+	fmt.Println(result)
 }
 
 func (s *BaiDuSpider)Close(){
-
+	for k,_ := range s.domains{
+		model.AddDomainRow(k,s.domain.ID)
+	}
 }

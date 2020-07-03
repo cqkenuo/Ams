@@ -3,10 +3,8 @@ package crawler
 import (
 	"fmt"
 	"strings"
-	"sync"
 	"time"
 )
-var once sync.Once
 type scheduler struct {
 	spider    SpiderInterface
 	goCnt     int
@@ -92,8 +90,6 @@ func (s *scheduler) Close() {
 			}
 		}
 	}()
-	once.Do(func() {
-		s.spider.Close()
-	})
 	close(s.taskQueue)
+	s.spider.Close()
 }

@@ -2,6 +2,7 @@ package subdomain
 
 import (
 	"Ams/crawler"
+	"Ams/model"
 	"github.com/jpillora/go-tld"
 	"net/http"
 )
@@ -9,7 +10,7 @@ import (
 type baseSpider struct {
 	crawler.Spider
 	baseUrl string
-	domain string
+	domain *model.Domains
 }
 
 func (b *baseSpider)TldParse(url string)*tld.URL{

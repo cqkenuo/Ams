@@ -2,8 +2,11 @@ package subdomain
 
 import (
 	"Ams/crawler"
+	"Ams/model"
 	"fmt"
 	"github.com/jpillora/go-tld"
+	"reflect"
+	"regexp"
 	"strings"
 )
 
@@ -22,14 +25,26 @@ func (f *Factory)validDomain(domain string)(*tld.URL,error){
 	return u,nil
 }
 
-func (f *Factory)CreateBaiDuSpider(domain string) crawler.SpiderInterface{
-	u,err := f.validDomain(domain)
-	if err != nil{
-		panic("初始化爬虫失败")
-	}
+func (f *Factory)CreateBaiDuSpider(domain *model.Domains) crawler.SpiderInterface{
+	fmt.Println(domain)
 	return &BaiDuSpider{
 		baseSpider:baseSpider{
-			domain:fmt.Sprintf("%s.%s",u.Domain,u.TLD),
+			domain:domain,
 			baseUrl: "https://www.baidu.com/s"},
 	    domains: map[string]int{}}
+}
+
+
+func (f *Factory)CreateSpider(domain *model.Domains)[] crawler.SpiderInterface{
+	typ := reflect.TypeOf(f)
+	val := reflect.ValueOf(f)
+	reg,_ := regexp.Compile(`Create[a-zA-Z]+Spider`)
+	var spiders []crawler.SpiderInterface
+	for i:=0;i<typ.NumMethod();i++{
+		method := typ.Method(i)
+		if reg.Match([]byte(method.Name)){
+			spiders = append(spiders,val.MethodByName(method.Name).Call([]reflect.Value{reflect.ValueOf(domain)})[0].Interface().(crawler.SpiderInterface))
+		}
+	}
+	return spiders
 }
