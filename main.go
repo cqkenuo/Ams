@@ -22,7 +22,7 @@ func Init() {
 func main() {
 	Init()
 	tmpCallback := make(chan []crawler.SpiderInterface)
-	d := &model.Domains{Domain: "oppo.com", Fid: 1}
+	d := &model.Domains{Domain: "oppo.com", Fid: 0}
 	subdomainChan <- subdomain.SDServiceTask{Domain: d, Callback: tmpCallback}
 	for _, item := range <-tmpCallback {
 		schedulerChan <- item

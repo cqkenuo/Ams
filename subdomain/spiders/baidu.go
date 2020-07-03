@@ -117,6 +117,7 @@ func (s *BaiDuSpider) ResultProcess(result []map[string]interface{}) {
 }
 
 func (s *BaiDuSpider) Close() {
+	fmt.Println("百度爬虫被关闭")
 	for k, _ := range s.domains {
 		model.AddDomainRow(k, s.domain.ID)
 	}

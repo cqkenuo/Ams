@@ -1,6 +1,9 @@
 package model
 
-import "Ams/config"
+import (
+	"Ams/config"
+	"fmt"
+)
 
 // Domains [...]
 type Domains struct {
@@ -14,7 +17,9 @@ type Domains struct {
 
 func AddDomainRow(domain string, fid int) *Domains {
 	db := GetAppDB(*config.LoadConfig())
-	row := &Domains{Domain: domain, Fid: fid}
-	db.Create(row)
+	row := &Domains{Domain: domain, Fid: fid,DNS: "[]"}
+	var result []interface{}
+	db.Raw("insert ignore into domains (domain,dns,fid) VALUES(?,'[]',?)",domain,fid).Scan(&result)
+	fmt.Println(result)
 	return row
 }
