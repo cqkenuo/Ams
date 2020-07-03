@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 )
+
 type scheduler struct {
 	spider    SpiderInterface
 	goCnt     int
@@ -85,7 +86,7 @@ func (s *scheduler) Close() {
 	defer func() {
 		if r := recover(); r != nil {
 			// 保证taskQueue只关闭一次 close of closed channel
-			if !strings.Contains(r.(error).Error(),"close of closed channel"){
+			if !strings.Contains(r.(error).Error(), "close of closed channel") {
 				panic(r)
 			}
 		}

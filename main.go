@@ -7,16 +7,16 @@ import (
 	"github.com/kataras/iris"
 )
 
-func init(){
+func init() {
 
 }
 
 func main() {
 	//test.Te(map[string]int{"v":10})
 	f := subdomain.Factory{}
-	s := f.CreateSpider(&model.Domains{Domain: "oppo.com",Fid: 1})
-	for _,spider := range s{
-		c := crawler.NewScheduler(spider,10)
+	s := f.CreateSpider(&model.Domains{Domain: "oppo.com", Fid: 1})
+	for _, spider := range s {
+		c := crawler.NewScheduler(spider, 10)
 		c.Start()
 	}
 	//baiduSpider := f.CreateBaiDuSpider("oppo.com")

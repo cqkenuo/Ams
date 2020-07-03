@@ -12,10 +12,9 @@ type Domains struct {
 	Fid    int    `gorm:"index;column:fid;type:int(11) unsigned;not null"`
 }
 
-
-func AddDomainRow(domain string,fid int) *Domains{
+func AddDomainRow(domain string, fid int) *Domains {
 	db := GetAppDB(*config.LoadConfig())
-	row := &Domains{Domain: domain,Fid: fid}
+	row := &Domains{Domain: domain, Fid: fid}
 	db.Create(row)
 	return row
 }

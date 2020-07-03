@@ -8,5 +8,4 @@ type SpiderInterface interface {
 }
 
 type Spider struct {
-
 }
