@@ -3,25 +3,30 @@ package main
 import (
 	"Ams/crawler"
 	"Ams/model"
-	subdomain "Ams/subdomain/spiders"
+	"Ams/subdomain"
 	"github.com/kataras/iris"
 )
 
-func init() {
+var (
+	subdomainChan chan subdomain.SDServiceTask
+	schedulerChan chan crawler.SpiderInterface
+)
 
+func Init() {
+	subdomainChan = make(chan subdomain.SDServiceTask)
+	schedulerChan = make(chan crawler.SpiderInterface)
+	go crawler.SchedulerService(schedulerChan)
+	go subdomain.SubdomainService(subdomainChan)
 }
 
 func main() {
-	//test.Te(map[string]int{"v":10})
-	f := subdomain.Factory{}
-	s := f.CreateSpider(&model.Domains{Domain: "oppo.com", Fid: 1})
-	for _, spider := range s {
-		c := crawler.NewScheduler(spider, 10)
-		c.Start()
+	Init()
+	tmpCallback := make(chan []crawler.SpiderInterface)
+	d := &model.Domains{Domain: "oppo.com", Fid: 1}
+	subdomainChan <- subdomain.SDServiceTask{Domain: d, Callback: tmpCallback}
+	for _, item := range <-tmpCallback {
+		schedulerChan <- item
 	}
-	//baiduSpider := f.CreateBaiDuSpider("oppo.com")
-	//s := crawler.NewScheduler(baiduSpider,10)
-	//s.Start()
 	app := iris.New()
 	app.Run(iris.Addr(":8080"))
 }

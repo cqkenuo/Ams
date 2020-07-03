@@ -1,4 +1,4 @@
-package subdomain
+package spiders
 
 import (
 	"Ams/crawler"

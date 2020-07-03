@@ -94,3 +94,18 @@ func (s *scheduler) Close() {
 	close(s.taskQueue)
 	s.spider.Close()
 }
+
+
+
+func SchedulerService(spiderChan chan SpiderInterface){
+	for {
+		item,ok := <- spiderChan
+		if ok {
+			control := NewScheduler(item,10)
+			go control.Start()
+		}else {
+			fmt.Println("调度管理器驾崩了")
+			break
+		}
+	}
+}
