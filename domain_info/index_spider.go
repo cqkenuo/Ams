@@ -9,14 +9,14 @@ import (
 )
 
 type IndexSpider struct {
-	domain string
+	Domain string
 }
 
 func (i IndexSpider) Seeds() []*crawler.Task {
 	tasks := make([]*crawler.Task, 2)
-	r, _ := http.NewRequest("GET", fmt.Sprintf("http://%s", i.domain), nil)
+	r, _ := http.NewRequest("GET", fmt.Sprintf("http://%s", i.Domain), nil)
 	tasks[0] = crawler.NewTask(r, nil)
-	r1, _ := http.NewRequest("GET", fmt.Sprintf("https://%s", i.domain), nil)
+	r1, _ := http.NewRequest("GET", fmt.Sprintf("https://%s", i.Domain), nil)
 	tasks[1] = crawler.NewTask(r1, nil)
 	return tasks
 }
@@ -24,6 +24,7 @@ func (i IndexSpider) Seeds() []*crawler.Task {
 func (i IndexSpider) Parse(request *crawler.Task, response *crawler.CResponse) crawler.SpiderResult {
 	//tasks := make([]*crawler.Task, 0)
 	sets := make([]map[string]interface{}, 0)
+	fmt.Println(response.Err)
 	if response.Err != nil {
 		sets = append(sets, map[string]interface{}{"err": response.Err.Error()})
 		return crawler.SpiderResult{SetData: sets}
@@ -41,7 +42,9 @@ func (i IndexSpider) Parse(request *crawler.Task, response *crawler.CResponse) c
 }
 
 func (i IndexSpider) ResultProcess(result []map[string]interface{}) {
-	panic("implement me")
+	for k, v := range result {
+		fmt.Println(k, v)
+	}
 }
 
 func (i IndexSpider) Close() {
