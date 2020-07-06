@@ -47,7 +47,7 @@ func strSliceUnique(v []string) []string {
 	return tmpSlice
 }
 
-func (dr *dnsResolve) LoopUp(domain string) []string {
+func (dr *dnsResolve) LookUp(domain string) []string {
 	setting := config.LoadConfig()
 	var resolves []string
 	for _, dnsServer := range setting.DnsServers {
