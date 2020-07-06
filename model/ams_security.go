@@ -3,6 +3,7 @@ package model
 import (
 	"Ams/config"
 	"fmt"
+	"strings"
 )
 
 // Domains [...]
@@ -18,8 +19,13 @@ type Domains struct {
 func AddDomainRow(domain string, fid int) *Domains {
 	db := GetAppDB(*config.LoadConfig())
 	row := &Domains{Domain: domain, Fid: fid,DNS: "[]"}
-	var result []interface{}
-	db.Raw("insert ignore into domains (domain,dns,fid) VALUES(?,'[]',?)",domain,fid).Scan(&result)
-	fmt.Println(result)
+	if err := 	db.Create(row).Error;err != nil{
+		if strings.Contains(err.Error()," Duplicate entry"){
+			var d = &Domains{}
+			db.Where("domain = ?",row.Domain).Find(&d)
+			fmt.Println("-----",d.ID,d.Domain)
+			return d
+		}
+	}
 	return row
 }
