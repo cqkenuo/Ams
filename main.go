@@ -16,7 +16,7 @@ func Init() {
 	subdomainChan = make(chan subdomain.SDServiceTask)
 	schedulerChan = make(chan crawler.SpiderInterface)
 	go crawler.SchedulerService(schedulerChan)
-	go subdomain.SubdomainService(subdomainChan)
+	go subdomain.Service(subdomainChan)
 }
 
 func main() {

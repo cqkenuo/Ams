@@ -12,7 +12,7 @@ type SDServiceTask struct {
 	Callback chan []crawler.SpiderInterface
 }
 
-func SubdomainService(domainChan chan SDServiceTask) {
+func Service(domainChan chan SDServiceTask) {
 	factory := spiders.Factory{}
 	for {
 		item, ok := <-domainChan

@@ -29,6 +29,7 @@ require (
 	github.com/klauspost/compress v1.10.10 // indirect
 	github.com/mattn/go-colorable v0.1.7 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.3 // indirect
+	github.com/miekg/dns v1.1.29
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/moul/http2curl v1.0.0 // indirect

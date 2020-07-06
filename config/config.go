@@ -20,6 +20,7 @@ type DBC struct {
 type Config struct {
 	Version string `yaml:"version"`
 	DbConf  DBC    `yaml:"dbConf"`
+	DnsServers []string `yaml:"dnsServers"`
 }
 
 var config *Config
