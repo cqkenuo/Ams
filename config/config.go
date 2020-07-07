@@ -23,7 +23,7 @@ type Config struct {
 	DnsServers []string `yaml:"dnsServers"`
 }
 
-var config *Config
+var config Config
 var once sync.Once
 
 func readConfFile() []byte {
@@ -34,7 +34,7 @@ func readConfFile() []byte {
 	return body
 }
 
-func LoadConfig() *Config {
+func LoadConfig() Config {
 	once.Do(func() {
 		err := yaml.Unmarshal(readConfFile(), &config)
 		if err != nil {

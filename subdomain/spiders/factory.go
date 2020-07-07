@@ -25,7 +25,6 @@ func (f *Factory) validDomain(domain string) (*tld.URL, error) {
 }
 
 func (f *Factory) CreateBaiDuSpider(domain *model.Domains) crawler.SpiderInterface {
-	fmt.Println(domain)
 	return &BaiDuSpider{
 		baseSpider: baseSpider{
 			domain:  domain,

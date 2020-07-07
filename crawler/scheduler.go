@@ -51,7 +51,9 @@ func (s *scheduler) engine() {
 					close(resultChan)
 					cResponse := NewCResponse(result.resp, result.err)
 					r := t1.callback(t1, cResponse)
-					cResponse.Close()
+					if result.err == nil{
+						cResponse.Close()
+					}
 					if r.TaskData != nil {
 						s.addTasks(r.TaskData)
 					}
@@ -59,9 +61,9 @@ func (s *scheduler) engine() {
 						s.spider.ResultProcess(r.SetData)
 					}
 				default:
-					// 结束协程，当channel持续1分钟未提供消息，我们将退出当前协程
+					// 结束协程，当channel持续30秒未提供消息，我们将退出当前协程
 					emptyQueueCnt++
-					if emptyQueueCnt >= 6 {
+					if emptyQueueCnt >= 3 {
 						s.Close()
 					}
 					time.Sleep(10 * time.Second)
@@ -104,7 +106,6 @@ func SchedulerService(spiderChan chan SpiderInterface){
 			control := NewScheduler(item,10)
 			go control.Start()
 		}else {
-			fmt.Println("调度管理器驾崩了")
 			break
 		}
 	}

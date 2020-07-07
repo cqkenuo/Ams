@@ -16,12 +16,12 @@ type Domains struct {
 }
 
 func AddDomainRow(domain string, fid int) *Domains {
-	db := GetAppDB(*config.LoadConfig())
-	row := &Domains{Domain: domain, Fid: fid,DNS: "[]",Title: "[]"}
-	if err := 	db.Create(row).Error;err != nil{
-		if strings.Contains(err.Error()," Duplicate entry"){
+	db := GetAppDB(config.LoadConfig())
+	row := &Domains{Domain: domain, Fid: fid, DNS: "[]", Title: "[]"}
+	if err := db.Create(row).Error; err != nil {
+		if strings.Contains(err.Error(), " Duplicate entry") {
 			var d = &Domains{}
-			db.Where("domain = ?",row.Domain).Find(&d)
+			db.Where("domain = ?", row.Domain).Find(&d)
 			return d
 		}
 	}

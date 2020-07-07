@@ -1,8 +1,8 @@
 package spiders
 
 import (
-	"Ams/config"
 	"Ams/crawler"
+	"Ams/domain_info"
 	"Ams/model"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
@@ -15,7 +15,6 @@ import (
 )
 
 var lock = sync.Mutex{}
-var db = model.GetAppDB(*config.LoadConfig())
 
 type BaiDuSpider struct {
 	baseSpider
@@ -118,7 +117,7 @@ func (s *BaiDuSpider) ResultProcess(result []map[string]interface{}) {
 
 func (s *BaiDuSpider) Close() {
 	fmt.Println("百度爬虫被关闭")
-	for k, _ := range s.domains {
-		model.AddDomainRow(k, s.domain.ID)
+	for k := range s.domains {
+		domain_info.DomainInfoCollect(model.AddDomainRow(k, s.domain.ID))
 	}
 }

@@ -18,7 +18,6 @@ func Service(domainChan chan SDServiceTask) {
 		item, ok := <-domainChan
 		if ok {
 			ss := factory.CreateSpider(item.Domain)
-			fmt.Println(ss)
 			item.Callback <- ss
 		} else {
 			fmt.Println("子域名服务驾崩")
