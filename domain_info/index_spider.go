@@ -31,7 +31,7 @@ func (i *IndexSpider) Seeds() []*crawler.Task {
 	return tasks
 }
 
-func (i IndexSpider) Parse(request *crawler.Task, response *crawler.CResponse) crawler.SpiderResult {
+func (i *IndexSpider) Parse(request *crawler.Task, response *crawler.CResponse) crawler.SpiderResult {
 	//tasks := make([]*crawler.Task, 0)
 	sets := make([]map[string]interface{}, 0)
 	if response.Err != nil {

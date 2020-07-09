@@ -2,8 +2,8 @@ package main
 
 import (
 	"Ams/crawler"
-	"Ams/model"
 	"Ams/subdomain"
+	"Ams/web"
 	"github.com/kataras/iris"
 )
 
@@ -21,12 +21,12 @@ func Init() {
 
 func main() {
 	Init()
-	tmpCallback := make(chan []crawler.SpiderInterface)
-	d := &model.Domains{Domain: "oppo.com", Fid: 0}
-	subdomainChan <- subdomain.SDServiceTask{Domain: d, Callback: tmpCallback}
-	for _, item := range <-tmpCallback {
-		schedulerChan <- item
-	}
-	app := iris.New()
+	//tmpCallback := make(chan []crawler.SpiderInterface)
+	//d := &model.Domains{Domain: "oppo.com", Fid: 0}
+	//subdomainChan <- subdomain.SDServiceTask{Domain: d, Callback: tmpCallback}
+	//for _, item := range <-tmpCallback {
+	//	schedulerChan <- item
+	//}
+	app := web.NewWebApp(subdomainChan, schedulerChan)
 	app.Run(iris.Addr(":8080"))
 }
