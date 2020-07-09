@@ -14,5 +14,8 @@ func NewWebApp(subdomainChan chan subdomain.SDServiceTask, schedulerChan chan cr
 	report := mvc.New(app.Party("/report"))
 	report.Register(services.NewWebService(), subdomainChan, schedulerChan)
 	report.Handle(new(controllers.ReportController))
+
+	htmlEngine := iris.HTML("./web/view", ".html")
+	app.RegisterView(htmlEngine)
 	return app
 }
